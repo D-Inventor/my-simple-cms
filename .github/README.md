@@ -11,4 +11,4 @@ A modular, extensible and non-intrusive CMS for ASP.NET 5+
 [WIP]
 
 # License
-[MIT License](LICENSE)
+[MIT License](/LICENSE)
