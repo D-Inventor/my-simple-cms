@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A019F261-8
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cms.Web.UnitTest", "test\Cms.Web.UnitTest\Cms.Web.UnitTest.csproj", "{E73D89B8-A7E0-4EC7-ADED-49F8889B2602}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{F78DF319-8652-4924-A9B8-7D6C1CAD8AE1}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
