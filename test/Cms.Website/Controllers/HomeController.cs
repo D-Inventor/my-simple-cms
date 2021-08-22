@@ -1,13 +1,9 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace Cms.Website.Controllers
 {
-    [Route("home")]
-    public class HomeController
-        : Controller
+    public class HomeController : Controller
     {
-        [Route("")]
         public IActionResult Index()
         {
             return View();

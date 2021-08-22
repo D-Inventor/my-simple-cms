@@ -7,23 +7,13 @@
  *                                                                           *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-
-namespace Cms.Core.Models
+namespace Cms.Pipeline.Mvc
 {
     /// <summary>
-    /// Any type that implements this interface can give information about an <see cref="IDocument{TModel}"/>
+    /// When implemented by a controller, this interface marks the controller for <see cref="Core.Models.IDocument{TModel}"/> based routing
     /// </summary>
-    public interface IDocumentInfo
-    {
-        /// <summary>
-        /// When implemented by a type, this property returns the <see cref="IDocument{TModel}"/>'s unique identifier
-        /// </summary>
-        Guid Id { get; }
-
-        /// <summary>
-        /// When implemented by a type, this property returns the <see cref="IDocument{TModel}"/>'s model type
-        /// </summary>
-        Type ModelType { get; }
-    }
+    /// <typeparam name="TModel">The type of the model of this request's <see cref="Core.Models.IDocument{TModel}"/></typeparam>
+    public interface ICmsDocumentController<out TModel>
+        where TModel : class
+    { }
 }

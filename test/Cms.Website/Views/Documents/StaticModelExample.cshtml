@@ -1,0 +1,8 @@
+﻿@inherits CmsPage<StaticModelExample, StaticModelExampleRequestData>
+@{ 
+    ViewData["Title"] = Document.Info.Id;
+}
+<h1>Hello world</h1>
+<p>@Model.RequestMessage</p>
+<p>@Document.Model.Message</p>
+<p>@Document.Info.Id</p>

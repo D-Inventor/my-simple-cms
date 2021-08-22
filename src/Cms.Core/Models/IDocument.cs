@@ -7,23 +7,30 @@
  *                                                                           *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using System;
-
 namespace Cms.Core.Models
 {
     /// <summary>
-    /// Any type that implements this interface can give information about an <see cref="IDocument{TModel}"/>
+    /// Any type that implements this interface can provide <see cref="IDocumentInfo"/> about this document.
     /// </summary>
-    public interface IDocumentInfo
+    public interface IDocument
     {
         /// <summary>
-        /// When implemented by a type, this property returns the <see cref="IDocument{TModel}"/>'s unique identifier
+        /// When implemented by a type, this property returns an instance of <see cref="IDocumentInfo"/> about this document.
         /// </summary>
-        Guid Id { get; }
+        IDocumentInfo Info { get; }
+    }
 
+    /// <summary>
+    /// Any type that implements this interface can provide <see cref="IDocumentInfo"/> about this document and it's model.
+    /// </summary>
+    /// <typeparam name="TModel">The type of the model of this document</typeparam>
+    public interface IDocument<out TModel>
+        : IDocument
+        where TModel : class
+    {
         /// <summary>
-        /// When implemented by a type, this property returns the <see cref="IDocument{TModel}"/>'s model type
+        /// When implemented by a type, this property returns the model of this <see cref="IDocument{TModel}"/>
         /// </summary>
-        Type ModelType { get; }
+        TModel Model { get; }
     }
 }

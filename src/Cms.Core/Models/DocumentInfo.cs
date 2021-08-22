@@ -1,72 +1,55 @@
-﻿using System;
+﻿/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+ *                                                                           *
+ *   LICENSE:                                                                *
+ *      mit                                                                  *
+ *   AUTHORS:                                                                *
+ *      D_Inventor                                                           *
+ *                                                                           *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+
+using System;
 
 namespace Cms.Core.Models
 {
     /// <summary>
-    /// This class contains <see langword="static" /> helper methods for creating instances of <see cref="IDocumentInfo"/> and <see cref="IDocumentWrapper{TDocument}"/>.
+    /// This class provides the document info as a POCO.
     /// </summary>
-    /// <remarks>
-    /// <para>This class should not be instantiated. Use the <see langword="static"/> helper methods to create instances of <see cref="IDocumentInfo"/> instead.</para>
-    /// </remarks>
     public class DocumentInfo
         : IDocumentInfo
     {
-        internal DocumentInfo()
-        { }
+        /// <inheritdoc />
+        public Guid Id { get; }
+
+        /// <inheritdoc />
+        public Type ModelType { get; }
+
+        private DocumentInfo(Guid id, Type modelType)
+        {
+            Id = id;
+            ModelType = modelType ?? throw new ArgumentNullException(nameof(modelType));
+        }
 
         /// <summary>
-        /// The unique identifier of the document
+        /// Creates a new instance of <see cref="IDocumentInfo"/>
         /// </summary>
-        public Guid Id { get; set; }
+        /// <param name="id">The unique identifier of the document</param>
+        /// <param name="modelType">The model type of the document</param>
+        /// <returns>A new instance of <see cref="IDocumentInfo"/></returns>
+        public static IDocumentInfo Create(Guid id, Type modelType)
+            => new DocumentInfo(id, modelType);
 
         /// <summary>
-        /// The model type that belongs to this document
+        /// Creates a new instance of <see cref="IDocumentInfo"/>
         /// </summary>
-        public Type DocumentType { get; set; }
-
-        /// <summary>
-        /// Creates a new document info object with an id and a document type
-        /// </summary>
-        /// <param name="id">The unique identifier for this document</param>
-        /// <param name="documentType">The model type for this document</param>
-        /// <returns>A new <see cref="IDocumentInfo"/> instance.</returns>
-        internal static IDocumentInfo Create(Guid id, Type documentType)
-            => new DocumentInfo
-            {
-                Id = id,
-                DocumentType = documentType
-            };
-
-        /// <summary>
-        /// Creates a new document info object with an id and a document type
-        /// </summary>
-        /// <typeparam name="TDocument">The model type for this document</typeparam>
-        /// <param name="id">The unique identifier for this document</param>
-        /// <returns>A new <see cref="IDocumentInfo"/> instance.</returns>
-        public static IDocumentInfo Create<TDocument>(Guid id)
-            where TDocument : class
-            => Create(id, typeof(TDocument));
-
-        /// <summary>
-        /// Creates a new document object with document info and an instance of the model
-        /// </summary>
-        /// <typeparam name="TDocument">The type of the document model</typeparam>
-        /// <param name="documentInfo">The information of the document</param>
-        /// <param name="document">The instance of the model</param>
-        /// <returns>A new <see cref="IDocumentWrapper{TDocument}"/> instance.</returns>
-        public static IDocumentWrapper<TDocument> Create<TDocument>(IDocumentInfo documentInfo, TDocument document)
-            where TDocument : class
-            => new DocumentWrapper<TDocument>(documentInfo, document);
-
-        /// <summary>
-        /// Creates a new document object with unique id and an instance of the model
-        /// </summary>
-        /// <typeparam name="TDocument">The type of the document model</typeparam>
-        /// <param name="id">The unique identifier for this document</param>
-        /// <param name="document">The model type for this document</param>
-        /// <returns>A new <see cref="IDocumentWrapper{TDocument}"/> instance.</returns>
-        public static IDocumentWrapper<TDocument> Create<TDocument>(Guid id, TDocument document)
-            where TDocument : class
-            => Create(Create<TDocument>(id), document);
+        /// <remarks>
+        /// <para>
+        /// Same as: <code>DocumentInfo.Create(id, typeof(TModel))</code>
+        /// </para>
+        /// </remarks>
+        /// <typeparam name="TModel">the model type of the document</typeparam>
+        /// <param name="id">The unique identifier of the document</param>
+        /// <returns>A new instance of <see cref="IDocumentInfo"/></returns>
+        public static IDocumentInfo Create<TModel>(Guid id)
+            => Create(id, typeof(TModel));
     }
 }
