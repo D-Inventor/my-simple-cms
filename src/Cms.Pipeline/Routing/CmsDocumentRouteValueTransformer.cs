@@ -8,7 +8,6 @@
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 using Cms.Core.Models;
-using Cms.Pipeline.Requests;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -27,11 +26,11 @@ namespace Cms.Pipeline.Routing
     public class CmsDocumentRouteValueTransformer
         : DynamicRouteValueTransformer
     {
-        private readonly IGetActionDescriptorRequestHandler<IDocument> _actionDescriptorRequestHandler;
+        private readonly ICmsDocumentActionDescriptorProvider _actionDescriptorProvider;
 
-        public CmsDocumentRouteValueTransformer(IGetActionDescriptorRequestHandler<IDocument> actionDescriptorRequestHandler)
+        public CmsDocumentRouteValueTransformer(ICmsDocumentActionDescriptorProvider actionDescriptorProvider)
         {
-            _actionDescriptorRequestHandler = actionDescriptorRequestHandler;
+            _actionDescriptorProvider = actionDescriptorProvider;
         }
 
         public override async ValueTask<RouteValueDictionary> TransformAsync(HttpContext httpContext, RouteValueDictionary values)
@@ -40,7 +39,7 @@ namespace Cms.Pipeline.Routing
             if (document is null) return values;
 
             // get matching action descriptor
-            var actionDescriptor = await _actionDescriptorRequestHandler.HandleAsync(document);
+            var actionDescriptor = await _actionDescriptorProvider.GetActionDescriptorAsync();
             if (actionDescriptor is null) return values;
 
             // add matching action descriptor route values to the route value dictionary

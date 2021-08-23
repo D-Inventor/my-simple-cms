@@ -11,19 +11,17 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 
 using System.Threading.Tasks;
 
-namespace Cms.Pipeline.Requests
+namespace Cms.Pipeline.Routing
 {
     /// <summary>
-    /// Any type that implements this interface can find an <see cref="ActionDescriptor"/> using the given <typeparamref name="TInput"/>
+    /// Any type that implements this interface can provide the action descriptor that fits the best with the <see cref="Core.Models.IDocument"/> associated with the current request
     /// </summary>
-    /// <typeparam name="TInput">The search parameter</typeparam>
-    public interface IGetActionDescriptorRequestHandler<in TInput>
+    public interface ICmsDocumentActionDescriptorProvider
     {
         /// <summary>
-        /// When implemented by a type, this method finds an <see cref="ActionDescriptor"/> based on the <paramref name="input"/>
+        /// When implemented by a type, this method provides an <see cref="ActionDescriptor"/> that fits best with the <see cref="Core.Models.IDocument"/> associated with the current request
         /// </summary>
-        /// <param name="input">The search parameter</param>
-        /// <returns>an <see cref="ActionDescriptor"/> that matches the given <paramref name="input"/></returns>
-        Task<ActionDescriptor> HandleAsync(TInput input);
+        /// <returns>an <see cref="ActionDescriptor"/> from the collection</returns>
+        Task<ActionDescriptor> GetActionDescriptorAsync();
     }
 }

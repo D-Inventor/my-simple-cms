@@ -7,10 +7,9 @@
  *                                                                           *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using Cms.Core.Models;
 using Cms.Core.Requests;
-using Cms.Pipeline.Factories;
 using Cms.Pipeline.Matching;
+using Cms.Pipeline.Middleware;
 using Cms.Pipeline.Requests;
 using Cms.Pipeline.Routing;
 
@@ -33,10 +32,13 @@ namespace Cms.Pipeline
             services.AddScoped<IDocumentInfoMatcher, StaticDocumentInfoMatcher>();
 
             services.AddTransient<CmsDocumentRouteValueTransformer>();
-            services.AddScoped<IGetActionDescriptorRequestHandler<IDocument>, ActionDescriptorByDocumentHandler>();
-            services.AddScoped(typeof(ICmsDocumentActionFilterAdapter<>), typeof(CmsDocumentActionFilterAdapter<>));
-            services.AddTransient<ICmsDocumentActionFilterFactory, CmsDocumentActionFilterFactory>();
-            services.AddScoped<ICmsDocumentActionFilter, ControllerTypeDocumentActionFilter>();
+            services.AddScoped<ICmsDocumentActionDescriptorProvider, CmsDocumentActionDescriptorProvider>();
+            services.AddScoped<ICmsDocumentActionDescriptorCandidateFilterProvider, CmsDocumentActionDescriptorCandidateFilterProvider>();
+            services.AddScoped<ICmsDocumentActionDescriptorCandidateFilter, ControllerTypeDocumentActionFilter>();
+            services.AddScoped<ICmsDocumentAccessor, CmsDocumentAccessor>();
+            services.AddScoped(typeof(ICmsDocumentAccessor<>), typeof(CmsDocumentAccessor<>));
+
+            services.AddHttpContextAccessor();
 
             return services;
         }

@@ -7,9 +7,6 @@
  *                                                                           *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using Cms.Core.Models;
-using Cms.Pipeline.Factories;
-
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -17,7 +14,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Cms.Pipeline.Requests
+namespace Cms.Pipeline.Routing
 {
     /// <summary>
     /// Makes a selection of all the known <see cref="ActionDescriptor"/>s using all available filters.
@@ -25,26 +22,26 @@ namespace Cms.Pipeline.Requests
     /// <remarks>
     /// <para>Registered in DI container as scoped</para>
     /// </remarks>
-    public class ActionDescriptorByDocumentHandler
-        : IGetActionDescriptorRequestHandler<IDocument>
+    public class CmsDocumentActionDescriptorProvider
+        : ICmsDocumentActionDescriptorProvider
     {
         private readonly IActionDescriptorCollectionProvider _actionDescriptorCollectionProvider;
-        private readonly ICmsDocumentActionFilterFactory _actionFilterFactory;
+        private readonly ICmsDocumentActionDescriptorCandidateFilterProvider _actionDescriptorFilterProvider;
 
-        public ActionDescriptorByDocumentHandler(IActionDescriptorCollectionProvider actionDescriptorCollectionProvider,
-                                                 ICmsDocumentActionFilterFactory actionFilterFactory)
+        public CmsDocumentActionDescriptorProvider(IActionDescriptorCollectionProvider actionDescriptorCollectionProvider,
+                                                   ICmsDocumentActionDescriptorCandidateFilterProvider actionDescriptorFilterProvider)
         {
             _actionDescriptorCollectionProvider = actionDescriptorCollectionProvider;
-            _actionFilterFactory = actionFilterFactory;
+            _actionDescriptorFilterProvider = actionDescriptorFilterProvider;
         }
 
         /// <inheritdoc />
-        public Task<ActionDescriptor> HandleAsync(IDocument input)
+        public Task<ActionDescriptor> GetActionDescriptorAsync()
         {
             IEnumerable<ActionDescriptor> candidates = _actionDescriptorCollectionProvider.ActionDescriptors.Items;
-            foreach (var filter in _actionFilterFactory.Create(input))
+            foreach (var filter in _actionDescriptorFilterProvider.Filters)
             {
-                candidates = filter.Filter(candidates, input);
+                candidates = filter.Filter(candidates);
             }
 
             return Task.FromResult(candidates.FirstOrDefault());

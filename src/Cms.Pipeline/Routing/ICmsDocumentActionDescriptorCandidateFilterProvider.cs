@@ -7,26 +7,22 @@
  *                                                                           *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using Cms.Core.Models;
-using Cms.Pipeline.Routing;
-
 using System.Collections.Generic;
 
-namespace Cms.Pipeline.Factories
+namespace Cms.Pipeline.Routing
 {
     /// <summary>
-    /// Any type that implements this interface can create instances of <see cref="ICmsDocumentActionFilter"/>
+    /// Any type that implements this interface can create instances of <see cref="ICmsDocumentActionDescriptorCandidateFilter"/>
     /// </summary>
-    public interface ICmsDocumentActionFilterFactory
+    public interface ICmsDocumentActionDescriptorCandidateFilterProvider
     {
         /// <summary>
-        /// When implemented by a type, this method creates instances of <see cref="ICmsDocumentActionFilter"/>
+        /// When implemented by a type, this property returns all available instances of <see cref="ICmsDocumentActionDescriptorCandidateFilter"/>
         /// </summary>
         /// <remarks>
-        /// <para>Result should also contain instances of <see cref="ICmsDocumentActionFilter{TModel}"/>, wrapped in an <see cref="ICmsDocumentActionFilterAdapter{TModel}"/></para>
+        /// <para>Result should also contain instances of <see cref="ICmsDocumentActionDescriptorCandidateFilter{TModel}"/></para>
         /// </remarks>
-        /// <param name="document">The input parameter</param>
-        /// <returns>A collection of instances of <see cref="ICmsDocumentActionFilter"/></returns>
-        IEnumerable<ICmsDocumentActionFilter> Create(IDocument document);
+        /// <returns>A collection of instances of <see cref="ICmsDocumentActionDescriptorCandidateFilter"/></returns>
+        IEnumerable<ICmsDocumentActionDescriptorCandidateFilter> Filters { get; }
     }
 }

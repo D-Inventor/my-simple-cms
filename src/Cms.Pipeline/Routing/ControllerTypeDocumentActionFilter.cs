@@ -7,7 +7,7 @@
  *                                                                           *
  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-using Cms.Core.Models;
+using Cms.Pipeline.Middleware;
 using Cms.Pipeline.Mvc;
 
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -21,12 +21,25 @@ namespace Cms.Pipeline.Routing
     /// <summary>
     /// Filters out all <see cref="ActionDescriptor"/>s that don't implement <see cref="ICmsDocumentController{TModel}"/> or have a different model than the document that is associated with the current request
     /// </summary>
+    /// <remarks>
+    /// <para>Registered in DI container as scoped</para>
+    /// </remarks>
     public class ControllerTypeDocumentActionFilter
-        : ICmsDocumentActionFilter
+        : ICmsDocumentActionDescriptorCandidateFilter
     {
-        /// <inheritdoc />
-        public IEnumerable<ActionDescriptor> Filter(IEnumerable<ActionDescriptor> input, IDocument document)
+        private readonly ICmsDocumentAccessor _documentAccessor;
+
+        public ControllerTypeDocumentActionFilter(ICmsDocumentAccessor documentAccessor)
         {
+            _documentAccessor = documentAccessor;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<ActionDescriptor> Filter(IEnumerable<ActionDescriptor> input)
+        {
+            var document = _documentAccessor.Document;
+            if (document is null) return input;
+
             var targetModelType = document.Info.ModelType;
             var targetControllerType = typeof(ICmsDocumentController<>).MakeGenericType(targetModelType);
 
