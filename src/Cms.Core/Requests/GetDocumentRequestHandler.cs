@@ -10,6 +10,7 @@
 using Cms.Core.Factories;
 using Cms.Core.Models;
 
+using System;
 using System.Threading.Tasks;
 
 namespace Cms.Core.Requests
@@ -37,6 +38,8 @@ namespace Cms.Core.Requests
         /// <inheritdoc />
         public async Task<IDocument> HandleAsync(TInput input)
         {
+            if (input is null) throw new ArgumentNullException(nameof(input));
+
             var info = await _getDocumentInfoRequestHandler.HandleAsync(input);
             if (info is null) return null;
 

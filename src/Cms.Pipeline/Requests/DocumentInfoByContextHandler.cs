@@ -13,6 +13,7 @@ using Cms.Pipeline.Matching;
 
 using Microsoft.AspNetCore.Http;
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -37,6 +38,8 @@ namespace Cms.Pipeline.Requests
         /// <inheritdoc />
         public async Task<IDocumentInfo> HandleAsync(HttpContext input)
         {
+            if (input is null) throw new ArgumentNullException(nameof(input));
+
             foreach (var matcher in _matchers)
             {
                 var result = await matcher.Match(input);
